@@ -23,6 +23,7 @@ Installation (CMD line):
 	- yarn install
 	- yarn add cors
 	- yarn add express ws axios
+	- yarn add chromadb
 
 - Install LangChain: 
 	- yarn add langchain

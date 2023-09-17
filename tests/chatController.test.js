@@ -10,6 +10,18 @@ jest.mock('langchain', () => ({
   })
 }));
 
+// Mock ChromaDB
+jest.mock('chromadb', () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      config: jest.fn(),
+      createCollection: jest.fn().mockReturnValue({
+        add: jest.fn()
+      })
+    };
+  });
+});
+
 // Start the server before all tests
 beforeAll(() => {
   server = app.listen(3001);
