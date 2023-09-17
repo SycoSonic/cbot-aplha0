@@ -6,14 +6,15 @@ Prerequisites
 
 - Node.js: Download and Install
 - Yarn: Download and Install
-- express
-- ws
-- axios
+- Yarn install express
+- Yarn install ws
+- Yarn install axios
 - OpenAI API key
 
 Installation (CMD line):
 - Clone the repository: 
 	- git clone https://github.com/SycoSonic/cbot-aplha0.git
+	- cd cbot-aplha0
 
 - Install Node.js dependencies: 
 	- npm install
@@ -27,6 +28,7 @@ Installation (CMD line):
 	- yarn add langchain
 
 - Run Tests: 
+	- yarn add --dev jest supertest
 	- yarn test
 
 Project Structure:

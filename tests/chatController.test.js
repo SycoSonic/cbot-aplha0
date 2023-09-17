@@ -2,6 +2,14 @@ const request = require('supertest');
 const app = require('../server');  // Import the app
 let server;
 
+// Mock specific methods of LangChain modules
+jest.mock('langchain', () => ({
+  Memory: jest.fn(),
+  Callbacks: jest.fn().mockImplementation(() => {
+    return { on: jest.fn() };
+  })
+}));
+
 // Start the server before all tests
 beforeAll(() => {
   server = app.listen(3001);
@@ -23,4 +31,3 @@ test('POST /api/chat', async () => {
   expect(response.status).toBe(200);
   // Add more assertions as needed
 });
-
