@@ -6,9 +6,12 @@ Prerequisites
 
 - Node.js: Download and Install
 - Yarn: Download and Install
-- Yarn install express
-- Yarn install ws
-- Yarn install axios
+- Yarn add express
+- Yarn add ws
+- Yarn add axios
+- Yarn add chromadb
+- yarn add @xenova/transformers
+- yarn add onnxjs
 - OpenAI API key
 
 Installation (CMD line):

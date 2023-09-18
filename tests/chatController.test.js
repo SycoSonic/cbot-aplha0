@@ -22,6 +22,19 @@ jest.mock('chromadb', () => {
   });
 });
 
+// Mock '@xenova/transformers' functionalities
+jest.mock('@xenova/transformers', () => ({
+  pipeline: jest.fn().mockImplementation(async (type) => {
+    if (type === 'sentiment-analysis') {
+      return async (text) => {
+        // Mocked sentiment analysis logic
+        return { sentiment: 'positive' };
+      };
+    }
+    throw new Error('Unknown pipeline type');
+  }),
+}));
+
 // Start the server before all tests
 beforeAll(() => {
   server = app.listen(3001);

@@ -3,7 +3,8 @@ const cors = require('cors');
 const chatRoutes = require('./routes/chatRoutes');
 const { OpenAI } = require('langchain/llms/openai');
 const { Memory, Callbacks } = require('langchain');
-const { ChromaClient } = require('chromadb');  // Make sure this matches the installed package name
+const { ChromaClient } = require('chromadb');
+const { pipeline } = require('@xenova/transformers'); // Updated import
 
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? 3001 : 3000;
@@ -12,6 +13,13 @@ const port = process.env.NODE_ENV === 'test' ? 3001 : 3000;
 const memory = new Memory();
 const callbacks = new Callbacks();
 
+let sentimentAnalysisPipeline; // Declare it here
+
+// Initialize Transformers asynchronously
+(async () => {
+  sentimentAnalysisPipeline = await pipeline('sentiment-analysis'); // Initialize pipeline
+})();
+
 // Initialize Chroma
 //const chromaDB = new ChromaClient({ path: 'http://localhost:8000' }); // Comment this line UNTIL CHROMA ACC SETUP
 // chromaDB.config({ dimensions: 300, metric: 'euclidean' }); // Comment this line UNTIL CHROMA ACC SETUP
@@ -19,11 +27,19 @@ const callbacks = new Callbacks();
 // Create a collection
 //const chatCollection = chromaDB.createCollection('chat'); // Comment this line UNTIL CHROMA ACC SETUP
 
-callbacks.on('new_message', (message) => {
+callbacks.on('new_message', async (message) => { // Marked as async
   console.log(`New message received: ${message}`);
-  // Add a document to the collection
-  //const doc = { message: message, vector: [0.1, 0.2, 0.3] };  // Replace vector with actual data // Comment this line UNTIL CHROMA ACC SETUP
-  //chatCollection.add(doc); // Comment this line UNTIL CHROMA ACC SETUP
+  
+  // Check if transformers is initialized
+  if (transformers) {
+  //embedding
+  const sentiment = await sentimentAnalysisPipeline(message); // Generate sentiment analysis
+    // Add a document to the collection
+    //const doc = { message: message, vector: [0.1, 0.2, 0.3] };  // Replace vector with actual data // Comment this line UNTIL CHROMA ACC SETUP
+    //chatCollection.add(doc); // Comment this line UNTIL CHROMA ACC SETUP
+  } else {
+    console.log("Transformers not initialized yet.");
+  }
 });
 
 // Middleware

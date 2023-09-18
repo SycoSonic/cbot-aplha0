@@ -1,10 +1,7 @@
 exports.getChat = (req, res) => {
-    // Your logic here
-    res.send('GET chat');
-  };
-  
-  exports.postChat = (req, res) => {
-    // Your logic here
-    res.send('POST chat');
-  };
-  
+  res.send('GET chat');
+};
+
+exports.postChat = (req, res) => {
+  res.send('POST chat');
+};
