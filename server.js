@@ -4,50 +4,46 @@ const chatRoutes = require('./routes/chatRoutes');
 const { OpenAI } = require('langchain/llms/openai');
 const { Memory, Callbacks } = require('langchain');
 const { ChromaClient } = require('chromadb');
-const { pipeline } = require('@xenova/transformers'); // Updated import
+const { pipeline } = require('@xenova/transformers');
 
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? 3001 : 3000;
 
-// Initialize LangChain Memory and Callbacks
 const memory = new Memory();
 const callbacks = new Callbacks();
 
-let sentimentAnalysisPipeline; // Declare it here
+let sentimentAnalysisPipeline;
+let chromaDB;
+let chatCollection;
 
-// Initialize Transformers asynchronously
-(async () => {
-  sentimentAnalysisPipeline = await pipeline('sentiment-analysis'); // Initialize pipeline
-})();
+const initialize = async () => {
+  try {
+    sentimentAnalysisPipeline = await pipeline('sentiment-analysis');
+    chromaDB = new ChromaClient({ path: 'http://localhost:8000' });
+    chromaDB.config({ dimensions: 300, metric: 'euclidean' });
+    chatCollection = chromaDB.createCollection('chat');
+  } catch (error) {
+    console.error("Initialization failed:", error);
+    process.exit(1);
+  }
+};
 
-// Initialize Chroma
-//const chromaDB = new ChromaClient({ path: 'http://localhost:8000' }); // Comment this line UNTIL CHROMA ACC SETUP
-// chromaDB.config({ dimensions: 300, metric: 'euclidean' }); // Comment this line UNTIL CHROMA ACC SETUP
-
-// Create a collection
-//const chatCollection = chromaDB.createCollection('chat'); // Comment this line UNTIL CHROMA ACC SETUP
-
-callbacks.on('new_message', async (message) => { // Marked as async
+callbacks.on('new_message', async (message) => {
   console.log(`New message received: ${message}`);
   
-  // Check if transformers is initialized
-  if (transformers) {
-  //embedding
-  const sentiment = await sentimentAnalysisPipeline(message); // Generate sentiment analysis
-    // Add a document to the collection
-    //const doc = { message: message, vector: [0.1, 0.2, 0.3] };  // Replace vector with actual data // Comment this line UNTIL CHROMA ACC SETUP
-    //chatCollection.add(doc); // Comment this line UNTIL CHROMA ACC SETUP
+  if (sentimentAnalysisPipeline) {
+    const sentiment = await sentimentAnalysisPipeline(message);
+    const doc = { message: message, vector: [0.1, 0.2, 0.3] };
+    chatCollection.add(doc);
   } else {
-    console.log("Transformers not initialized yet.");
+    console.log("Sentiment analysis pipeline not initialized yet.");
   }
 });
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// Use Routes
 app.use('/api', chatRoutes);
 
 app.get('/', (req, res) => {
@@ -55,8 +51,10 @@ app.get('/', (req, res) => {
 });
 
 if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+  initialize().then(() => {
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}/`);
+    });
   });
 }
 

@@ -1071,10 +1071,10 @@ chroma@^0.0.1:
   resolved "https://registry.npmjs.org/chroma/-/chroma-0.0.1.tgz"
   integrity sha512-spXrvnDrn4IKEN/s0G9vri2+GGZhB15bDU22bbPRnOSEnkGgzGVSFoj/2TeRO5PBysOI4bcHor/8wIamocN09A==
 
-chromadb@^1.5.9:
-  version "1.5.9"
-  resolved "https://registry.npmjs.org/chromadb/-/chromadb-1.5.9.tgz"
-  integrity sha512-lHSdQE6WAhn0Ba6In/z4jPkUFa0MhkeX99JfUVrRdJsgc77IUEtlb+pP+ULM/Qb5fXmfY/lz5hIM+Ns2v8ywIg==
+chromadb@^1.5.10:
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/chromadb/-/chromadb-1.5.10.tgz#f38f4ce3cbeaa97d56d283b17821bac8fa401135"
+  integrity sha512-ul4kpvgDHbXclqqYboFuGn6VMux7b+88+2roGEid62PRInvv6e3sB69EAFIC5v5o/Rx34bhlVi8DByhH9iSe1A==
   dependencies:
     isomorphic-fetch "^3.0.0"
 
