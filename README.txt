@@ -1,4 +1,4 @@
-Introduction
+Introduction 1.2a
 
 This is a chatbot project that leverages LangChain and other technologies to provide a seamless conversational experience. This README aims to guide you through the setup process and provide an overview of the project.
 
